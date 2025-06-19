@@ -1,31 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import networkx as nx
+from typing import List
 
-"""
-generate poisson distribution array
-"""
-expected_rides=48 #change manually
-hourly_usage = [ 5,  4,  4,  5,  5,  3,  5,  4,  6,  7,  2,  5, 
-5,  6,  4,  6,  6,  1,  7,  2, 11,  4,  3,  8] #change manually
-num_bikes_hour = np.array(hourly_usage)
-L = num_bikes_hour / np.sum(num_bikes_hour) * expected_rides
-poisson_dist = np.random.poisson(L)
-print(poisson_dist)
-
-"""
-plot poisson distribution
-"""
-plt.figure(figsize=(12, 6))
-plt.bar(time_labels, poisson_dist, color='skyblue', edgecolor='black')
-plt.xticks(rotation=45)
-plt.title("Simulated Ebike Usage by Hour (Poisson Model)")
-plt.xlabel("Time of Day")
-plt.ylabel("Number of Rides")
-plt.grid(axis='y', linestyle='--', alpha=0.6)
-plt.tight_layout()
-plt.show()
-
+#bike hubs around Middlebury College and town
 location_index = {
     "twilight": 0,
     "athletic_complex": 1,
@@ -53,10 +30,11 @@ matrix = [[0, 11, 11, 6, 6, 13, 6, 10, 8, 7],
     [5, 5, 5, 1, 6, 9, 3, 6, 2, 0]]
 
 """
+Creates graph with each node being a bike hub in Middlebury and each edge being the distance it takes to get from nodes k to v
 param: matrix with each index representing the time it takes to get from x hub to y hub
-returns: map with hubs as nodes and edges as bike time between nodes (minutes)
+returns: map of Middlebury with hubs as nodes and edges as bike time between nodes (minutes)
 """
-def create_graph(matrix):
+def create_graph(matrix: List[List[int]]) -> nx.DiGraph:
     num_hubs = len(matrix)
     graph = nx.DiGraph()
     for i in range(num_hubs):
